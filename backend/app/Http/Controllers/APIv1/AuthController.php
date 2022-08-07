@@ -52,7 +52,7 @@ class AuthController extends Controller
         $cookie = Cookie::forget('jwt');
 
         return response([
-            'message' => 'Success'
+            'message' => 'Login Successful'
         ])->withCookie($cookie);
     }
 }
