@@ -41,9 +41,9 @@ class File extends Model
         static::creating(function ($model) {
             $model->uuid = Str::uuid();
         });
-        static::creating(function ($model) {
+/*         static::creating(function ($model) {
             $model->author_id = Auth::user()->id;
-        });
+        }); */
         static::deleting(function ($model){
             Storage::disk('local')->delete($model->path);
         });

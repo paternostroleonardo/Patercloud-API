@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\APIv1;
 
 use App\Http\Controllers\ApiController;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Models\Folder;
 use App\Models\Objeto;
@@ -13,11 +12,14 @@ class CloudController extends ApiController
 {
     public function index()
     {
-        $roots = Objeto::isRoot()->with('objectable')->get()->values();
+        $tree = Objeto::tree()->get();
+        $allTree = $tree->toTree();
+
+        $roots = Objeto::isRoot()->with('objectable')->get();
 
         return response()
             ->json([
-                'childrens' => Objeto::tree(),
+                'allTree' => $allTree,
                 'roots' => $roots
             ]);
     }

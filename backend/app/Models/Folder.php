@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use Staudenmeir\LaravelAdjacencyList\Eloquent\Relations\HasManyOfDescendants;
 use Staudenmeir\LaravelAdjacencyList\Eloquent\Relations\MorphToManyOfDescendants;
 
 class Folder extends Model
@@ -26,9 +25,9 @@ class Folder extends Model
         static::creating(function ($model){
             $model->uuid = Str::uuid();
         });
-        static::creating(function ($model) {
+/*         static::creating(function ($model) {
             $model->author_id = Auth::user()->id;
-        });
+        }); */
     }
 
     public function objects(): MorphMany

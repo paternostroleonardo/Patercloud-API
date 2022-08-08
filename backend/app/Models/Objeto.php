@@ -39,7 +39,7 @@ class Objeto extends Model
         return $this->morphTo();
     }
 
-    public static function tree()
+    public static function inicializateTree()
     {
         $allObjects = Objeto::get();
         $rootObjects = $allObjects->whereNull('parent_id');
@@ -48,12 +48,12 @@ class Objeto extends Model
         return $rootObjects;
     }
 
-    private static function formatTree($rootObjects, $allobjetcts)
+    private static function formatTree($rootObjects, $allObjetcts)
     {
         foreach ($rootObjects as $object) {
-            $object->children = $allobjetcts->where('parent_id', $object->id)->values();
+            $object->children = $allObjetcts->where('parent_id', $object->id)->values();
             if ($object->children->isNotEmpty()) {
-                self::formatTree($object->children, $allobjetcts);
+                self::formatTree($object->children, $allObjetcts);
             }
         }
     }
