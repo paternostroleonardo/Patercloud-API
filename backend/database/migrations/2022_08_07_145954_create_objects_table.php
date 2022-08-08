@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid');
             $table->morphs('objectable');
-            $table->foreignId('parent_id')->nullable()->constrained('objects');
+            $table->foreignId('parent_id')->nullable()->references('id')->on('objects');;
             $table->softDeletes();
             $table->timestamps();
         });

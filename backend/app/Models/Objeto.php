@@ -5,13 +5,10 @@ namespace App\Models;
 use \Staudenmeir\LaravelAdjacencyList\Eloquent\HasRecursiveRelationships;
 use \Staudenmeir\LaravelCte\Eloquent\QueriesExpressions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use App\Models\Folder;
-use App\Models\File;
-use App\Models\User;
 
 class Objeto extends Model
 {
@@ -37,26 +34,26 @@ class Objeto extends Model
         });
     }
 
-    public function objectable()
+    public function objectable(): MorphTo
     {
         return $this->morphTo();
     }
 
     public static function tree()
     {
-        $allObject = Objeto::get();
-        $rootObjects = $allObject->whereNull('parent_id');
-        self::formatTree($rootObjects, $allObject);
+        $allObjects = Objeto::get();
+        $rootObjects = $allObjects->whereNull('parent_id');
+        self::formatTree($rootObjects, $allObjects);
 
         return $rootObjects;
     }
 
-    private static function formatTree($rootObjects, $allobjetos)
+    private static function formatTree($rootObjects, $allobjetcts)
     {
-        foreach ($rootObjects as $objeto) {
-            $objeto->children = $allobjetos->where('parent_id', $objeto->id)->values();
-            if ($objeto->children->isNotEmpty()) {
-                self::formatTree($objeto->children, $allobjetos);
+        foreach ($rootObjects as $object) {
+            $object->children = $allobjetcts->where('parent_id', $object->id)->values();
+            if ($object->children->isNotEmpty()) {
+                self::formatTree($object->children, $allobjetcts);
             }
         }
     }

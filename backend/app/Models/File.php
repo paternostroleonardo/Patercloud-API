@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Model;
@@ -48,7 +49,7 @@ class File extends Model
         });
     }
 
-    public function objects()
+    public function objects(): MorphMany
     {
         return $this->morphMany(Objeto::class, 'objectable');
     }
