@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\APIv1;
 
-use App\Models\User;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use Symfony\Component\HttpFoundation\Response;
+use App\Http\Controllers\ApiController;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Cookie;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Request;
+use App\Models\User;
 
-class AuthController extends Controller
+class AuthController extends ApiController
 {
 
     public function register(Request $request)
@@ -37,9 +37,11 @@ class AuthController extends Controller
 
         $cookie = cookie('jwt', $token, 60 * 24); // 1 day
 
-        return response([
-            'message' => $token
-        ])->withCookie($cookie);
+        return response()->json([
+            "status" => 200, "success" => true,
+            'Welcome!' . ' ' . $user->name => $token
+        ])
+            ->withCookie($cookie);
     }
 
     public function user()
@@ -51,8 +53,7 @@ class AuthController extends Controller
     {
         $cookie = Cookie::forget('jwt');
 
-        return response([
-            'message' => 'Login Successful'
-        ])->withCookie($cookie);
+        return response()->json(['Logout successful'])
+            ->withCookie($cookie);
     }
 }

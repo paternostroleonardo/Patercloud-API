@@ -25,7 +25,9 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::prefix('cloud')->group(function () {
-    Route::get('/', [CloudController::class, 'index'])->name('home');
+    Route::get('/', [CloudController::class, 'index'])->name('home.index');
+    Route::get('/me', [CloudController::class, 'indexMe'])->name('me.index');
+    Route::get('/childrens/{id}', [CloudController::class, 'childrens'])->name('childrens.index');
     Route::post('/save/folder', [CloudController::class, 'storeFolder'])->name('folder.store');
     Route::post('/save/file', [CloudController::class, 'storeFile'])->name('file.store');
 });

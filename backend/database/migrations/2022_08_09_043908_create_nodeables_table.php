@@ -13,12 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('objects', function (Blueprint $table) {
-            $table->id();
-            $table->uuid('uuid');
-            $table->morphs('objectable');
-            $table->foreignId('parent_id')->nullable()->references('id')->on('objects');;
-            $table->softDeletes();
+        Schema::create('nodeables', function (Blueprint $table) {
+            $table->integer("node_id");
+            $table->integer("nodeable_id");
+            $table->string("nodeable_type");
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('objects');
+        Schema::dropIfExists('nodeables');
     }
 };

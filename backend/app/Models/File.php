@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use App\Models\Objeto;
+use App\Models\Node;
 
 class File extends Model
 {
@@ -49,8 +49,8 @@ class File extends Model
         });
     }
 
-    public function objects(): MorphMany
+    public function nodes(): MorphToMany
     {
-        return $this->morphMany(Objeto::class, 'objectable');
+        return $this->morphToMany(Node::class, 'nodeable');
     }
 }

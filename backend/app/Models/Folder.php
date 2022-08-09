@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use \Staudenmeir\LaravelAdjacencyList\Eloquent\HasRecursiveRelationships;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Staudenmeir\LaravelAdjacencyList\Eloquent\Relations\MorphToManyOfDescendants;
+use App\Models\Node;
 
 class Folder extends Model
 {
@@ -30,13 +32,13 @@ class Folder extends Model
         }); */
     }
 
-    public function objects(): MorphMany
+    public function nodes(): MorphToMany
     {
-        return $this->morphMany(Objeto::class, 'objectable');
+        return $this->morphToMany(Node::class, 'nodeable');
     }
 
-    public function recursiveObjects(): MorphToManyOfDescendants
+    public function recursiveNodes(): MorphToManyOfDescendants
     {
-        return $this->morphToManyOfDescendantsAndSelf(Objeto::class, 'objectable');
+        return $this->morphToManyOfDescendants(Node::class, 'nodeable');
     }
 }

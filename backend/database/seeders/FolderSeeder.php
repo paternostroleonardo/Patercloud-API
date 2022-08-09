@@ -5,7 +5,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Folder;
-use App\Models\Objeto;
+use App\Models\Node;
+use App\Models\Nodeable;
 
 class FolderSeeder extends Seeder
 {
@@ -19,10 +20,16 @@ class FolderSeeder extends Seeder
         Folder::factory()
             ->count(8)
             ->createQuietly()->each(function (Folder $folder) {
-            Objeto::create([
-                    'objectable_type' => 'App\Models\File',
-                    'objectable_id' => $folder->id,
-                    'parent_id' => null
+                Nodeable::create([
+                    'node_id' => random_int(1, 30),
+                    'nodeable_type' => 'App\Models\Folder',
+                    'nodeable_id' => $folder->id,
+                ]);
+                Node::create([
+                    'nodeType' => 'Folder',
+                    'nodeable_type' => 'App\Models\Folder',
+                    'nodeable_id' => $folder->id,
+                    'parent_id' => null,
                 ]);
             });
     }

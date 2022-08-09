@@ -5,9 +5,10 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Seeder;
-use App\Models\Objeto;
 use App\Models\Folder;
 use App\Models\File;
+use App\Models\Node;
+use App\Models\Nodeable;
 
 class ChildrenSeeder extends Seeder
 {
@@ -20,25 +21,37 @@ class ChildrenSeeder extends Seeder
     public function run()
     {
         Folder::factory()
-        ->count(4)
-        ->create()->each(function (Folder $folder) {
-            $folders = Objeto::whereNull('parent_id')->select('id')->get();
-            Objeto::create([
-                'objectable_type' => 'App/Models/Folder',
-                'objectable_id' => $folder->id,
-                'parent_id' => $folders->random()->id
-            ]);
-        });
+            ->count(4)
+            ->create()->each(function (Folder $folder) {
+                $folders = Node::whereNull('parent_id')->select('id')->get();
+                Node::create([
+                    'nodeType' => 'Folder',
+                    'nodeable_type' => 'App/Models/Folder',
+                    'nodeable_id' => $folder->id,
+                    'parent_id' => $folders->random()->id
+                ]);
+                Nodeable::create([
+                    'node_id' => random_int(1, 30),
+                    'nodeable_type' => 'App/Models/Folder',
+                    'nodeable_id' => $folder->id
+                ]);
+            });
 
         File::factory()
-        ->count(10)
-        ->create()->each(function (File $file) {
-            $folders = Objeto::whereNull('parent_id')->select('id')->get();
-            Objeto::create([
-                'objectable_type' => 'App\Models\File',
-                'objectable_id' => $file->id,
-                'parent_id' => $folders->random()->id
-            ]);
-        });
+            ->count(4)
+            ->create()->each(function (File $file) {
+                $folders = Node::whereNull('parent_id')->select('id')->get();
+                Node::create([
+                    'nodeType' => 'File',
+                    'nodeable_type' => 'App/Models/File',
+                    'nodeable_id' => $file->id,
+                    'parent_id' => $folders->random()->id
+                ]);
+                Nodeable::create([
+                    'node_id' => random_int(1, 30),
+                    'nodeable_type' => 'App/Models/File',
+                    'nodeable_id' => $file->id
+                ]);
+            });
     }
 }

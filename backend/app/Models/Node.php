@@ -9,18 +9,17 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Staudenmeir\LaravelAdjacencyList\Eloquent\Relations\MorphToManyOfDescendants;
 
-class Objeto extends Model
+class Node extends Model
 {
     use HasFactory, SoftDeletes, HasRecursiveRelationships, QueriesExpressions;
 
-    protected $table = 'objects';
-
     protected $fillable = [
         'uuid',
-        'parent_id',
-        'objectable_id',
-        'objectable_type'
+        'nodeable_id',
+        'nodeable_type',
+        'parent_id'
     ];
 
     public static function booted()
@@ -34,14 +33,24 @@ class Objeto extends Model
         });
     }
 
-    public function objectable(): MorphTo
+    public function folders()
+    {
+        return $this->morphedByMany(Folder::class, 'nodeable');
+    }
+
+    public function files()
+    {
+        return $this->morphedByMany(File::class, 'nodeable');
+    }
+
+    public function nodeable()
     {
         return $this->morphTo();
     }
 
     public static function inicializateTree()
     {
-        $allObjects = Objeto::get();
+        $allObjects = self::get();
         $rootObjects = $allObjects->whereNull('parent_id');
         self::formatTree($rootObjects, $allObjects);
 
