@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('nodes', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid');
-            $table->string('nodeType');
+            $table->string('nodeType')->nullable();
             $table->morphs('nodeable');
             $table->foreignId('parent_id')->nullable()->references('id')->on('nodes');;
             $table->softDeletes();

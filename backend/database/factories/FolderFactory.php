@@ -21,7 +21,7 @@ class FolderFactory extends Factory
         $user = User::all();
         return [
             'uuid' => Str::uuid(),
-            'name' => $this->faker->title,
+            'name' => $this->faker->name(),
             'author_id' =>  $user->random()->id
         ];
     }

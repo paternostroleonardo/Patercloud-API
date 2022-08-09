@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\APIv1;
 
+use App\Http\Requests\Requests\FolderCreateRequest;
+use App\Http\Requests\Requests\FileCreateRequest;
 use App\Http\Controllers\ApiController;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use App\Models\Folder;
 use App\Models\Node;
 use App\Models\File;
 use App\Models\Nodeable;
-use Illuminate\Http\JsonResponse;
 
 class CloudController extends ApiController
 {
@@ -17,9 +18,12 @@ class CloudController extends ApiController
     {
         $roots = Node::isRoot()->with('nodeable')->get();
 
+        $tree = Node::tree()->get();
+        $allTree = $tree->toTree();
+
         return response()
             ->json([
-                'roots' => $roots
+                'roots' => $allTree
             ]);
     }
 
@@ -51,11 +55,14 @@ class CloudController extends ApiController
             ]);
     }
 
-    public function storeFolder(Request $request)
+    public function storeFolder(FolderCreateRequest $request)
     {
+        $validatedData = $request->validated();
+
+        $user = auth()->user();
         $folder = Folder::create([
-            'name' => $request->name,
-            'author_id' => 1
+            'name' => $validatedData['name'],
+            'author_id' => $user->id
         ]);
 
         if ($folder) {
@@ -68,6 +75,8 @@ class CloudController extends ApiController
 
             Node::create([
                 'nodeType' => 'Folder',
+                'nodeable_type' => 'App/Models/Folder',
+                'nodeable_id' => $folder->id,
                 'parent_id' => $request->parent_id
             ]);
 
@@ -77,16 +86,18 @@ class CloudController extends ApiController
         }
     }
 
-    public function storeFile(Request $request)
+    public function storeFile(FileCreateRequest $request)
     {
-        $fileName = time() . '_' . $request->file->getClientOriginalName();
+        $validatedData = $request->validated();
+        $user = auth()->user();
+        $fileName = time() . '_' . $validatedData['file']->getClientOriginalName();
         $filePath = $request->file('file')->StoreAs('uploads', $fileName, 'public');
 
         $file = File::create([
             'name' => $fileName,
             'path' => '/storage/' . $filePath,
             'size' => $request->file->getSize(),
-            'author_id' => 1
+            'author_id' => $user->id
         ]);
 
         if ($file) {
@@ -98,6 +109,7 @@ class CloudController extends ApiController
             ]);
 
             Node::create([
+                'nodeType' => 'File',
                 'nodeable_type' => 'App/Models/File',
                 'nodeable_id' => $file->id,
                 'parent_id' => $request->parent_id

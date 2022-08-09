@@ -21,7 +21,7 @@ class FileFactory extends Factory
         $user = User::all();
         return [
             'uuid' => Str::uuid(),
-            'name' => $this->faker->title,
+            'name' => $this->faker->name(),
             'path' => $this->faker->url(),
             'size' => $this->faker->randomNumber(5, false),
             'author_id' => $user->random()->id
